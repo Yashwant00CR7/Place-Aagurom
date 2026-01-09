@@ -607,10 +607,74 @@ class Sathish_Sir_Probelms:
   class Knight_min_problem:
     # A Chessboard has always a 8*8 grid , and a knight can only possibly move 8 moves from a pos
     # So imagine the chessbaord like a 2*2 matrix and start working
-    def __init__(self):
-      self.x=0
-      self.y=0
-      self.moves=0
+    class Cell:
+      def __init__(self,x,y,moves):
+        self.x=x
+        self.y=y
+        self.moves=moves
+
+    def check_boundary(self,x,y):
+      # return True
+      return True if 0<=x<8 and 0<=y<8 else False
+    
+    def knight_min_bfs(self,knight_pos,target_pos):
+      dx=[-1,-1,1,1,2,2,-2,-2]
+      dy=[-2,2,2,-2,1,-1,1,-1]
+      queue=[]
+      visited = [[False]*8 for _ in range(8)]
+      # visited = [[False]*8]*8 
+      # This Wont work because it creates shallow copy
+      print(visited)
+      queue.append(self.Cell(knight_pos[0],knight_pos[1],0))
+      visited[knight_pos[0]][knight_pos[1]]=True
+      while queue:
+        k=queue.pop(0)
+        if k.x==target_pos[0] and k.y==target_pos[1]:
+          return k.moves
+        for i in range(8):
+          x=k.x+dx[i]
+          y=k.y+dy[i]
+
+          if Sathish_Sir_Probelms.Knight_min_problem.check_boundary(self,x,y) and not visited[x][y]:
+            print(x,y)
+            visited[x][y]=True
+            queue.append(self.Cell(x,y,k.moves+1))
+      return -1
+    
+
+    min_steps=float('inf')
     '''DFS'''
-    def knight_min_dfs(knight_pos,target_pos):
-      pass
+    def knight_min_dfs(self,knight_pos,target_pos,steps,visited):
+      dx=[-1,-1,1,1,2,2,-2,-2]
+      dy=[-2,2,2,-2,1,-1,1,-1]
+      x=knight_pos[0]
+      y=knight_pos[1]
+      if x==target_pos[0] and y==target_pos[1]:
+        Sathish_Sir_Probelms.Knight_min_problem.min_steps=min(Sathish_Sir_Probelms.Knight_min_problem.min_steps,steps)
+        return
+      if steps>Sathish_Sir_Probelms.Knight_min_problem.min_steps:
+        return
+      for i in range(8):
+        cx=x+dx[i]
+        cy=y+dy[i]
+        print(cx,cy)
+        if Sathish_Sir_Probelms.Knight_min_problem.check_boundary(self,cx,cy) and not visited[cx][cy]:
+          visited[cx][cy]=True
+          Sathish_Sir_Probelms.Knight_min_problem.knight_min_dfs(self,(cx,cy),target_pos,steps+1,visited)
+          visited[cx][cy]=False
+      return -1
+
+out1=Sathish_Sir_Probelms.Knight_min_problem()
+visited = [[False]*8 for _ in range(8)]
+knight_pos=(0,0)
+visited[knight_pos[0]][knight_pos[1]]=True
+out1.knight_min_dfs(knight_pos,(2,1),0,visited)
+print(Sathish_Sir_Probelms.Knight_min_problem.min_steps)
+
+# Note: Important Concept
+# visited=[[1]*4]*4
+# visited[0][0]=0
+# print(visited)
+# visited=[[1]*4 for _ in range(4)]
+# visited[0][0]=0
+# print(visited)
