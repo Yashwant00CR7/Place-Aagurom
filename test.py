@@ -603,6 +603,7 @@ class TreeNode:
 # print(list(dic.values()))
 # # print(TreeNode.left_view(root,0))
 
+
 class Sathish_Sir_Probelms:
   class Knight_min_problem:
     # A Chessboard has always a 8*8 grid , and a knight can only possibly move 8 moves from a pos
@@ -664,12 +665,12 @@ class Sathish_Sir_Probelms:
           visited[cx][cy]=False
       return -1
 
-out1=Sathish_Sir_Probelms.Knight_min_problem()
-visited = [[False]*8 for _ in range(8)]
-knight_pos=(0,0)
-visited[knight_pos[0]][knight_pos[1]]=True
-out1.knight_min_dfs(knight_pos,(2,1),0,visited)
-print(Sathish_Sir_Probelms.Knight_min_problem.min_steps)
+# out1=Sathish_Sir_Probelms.Knight_min_problem()
+# visited = [[False]*8 for _ in range(8)]
+# knight_pos=(0,0)
+# visited[knight_pos[0]][knight_pos[1]]=True
+# out1.knight_min_dfs(knight_pos,(2,1),0,visited)
+# print(Sathish_Sir_Probelms.Knight_min_problem.min_steps)
 
 # Note: Important Concept
 # visited=[[1]*4]*4
@@ -678,3 +679,36 @@ print(Sathish_Sir_Probelms.Knight_min_problem.min_steps)
 # visited=[[1]*4 for _ in range(4)]
 # visited[0][0]=0
 # print(visited)
+
+class Disjoint_Sets():
+  def __init__(self,n):
+    self.rank=[0]*(n+1)
+    self.parent=[i for i in range(n+1)]
+  
+  def findPar(self,node):
+    if node==self.parent[node]:
+      return node
+    self.parent[node]=self.findPar(self.parent)
+    return self.parent[node]
+
+  def union(self,u,v):
+    parentU=self.parent[u]
+    parentV=self.parent[v]
+
+    if parentU==parentV:
+      print(f"Not Possible for {u},{v} Already in same component")
+      return False
+    if self.rank[parentU]<self.rank[parentV]:
+      self.parent[parentU]=parentV
+    elif self.rank[parentU]>self.rank[parentV]:
+      self.parent[parentV]=parentU
+    else:
+      self.parent[parentV]=parentU
+      self.rank[parentU]+=1
+
+
+# ds=Disjoint_Sets(4)
+# ds.union(1,2)
+# ds.union(2,3)
+# ds.union(2,4)
+# ds.union(1,4)
