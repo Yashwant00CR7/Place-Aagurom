@@ -712,3 +712,60 @@ class Disjoint_Sets():
 # ds.union(2,3)
 # ds.union(2,4)
 # ds.union(1,4)
+
+
+class Backtrack:
+  class Maze:
+    import copy
+    maze=[[0,1,0,0],[0,0,0,0],[0,1,0,0],[0,0,0,0]]
+    solution=[[0 for _ in range(4)] for _ in range(4)]
+    min_steps=float('inf')
+    def maze_path(solution,target,pos,n,steps):
+      x,y=pos
+      if x==target[0] and y==target[1] and Backtrack.Maze.maze[x][y]==0:
+        solution[x][y]=1
+        # for i in range(len(solution)):
+        #   for j in range(len(solution[0])):
+        #     print(solution[i][j],end=' ')
+        #   print("\t",end=' ')
+        #   for k in range(len(solution[0])):
+        #     print(Backtrack.Maze.maze[i][k],end=' ')
+        #   print()
+        # print('\n')
+
+        #To find Min steps
+        if steps<Backtrack.Maze.min_steps:
+          Backtrack.Maze.min_steps=steps
+          #Understodd the difference between .copy() and .deepcopy()
+          Backtrack.Maze.solution=Backtrack.Maze.copy.deepcopy(solution)
+        return False
+
+      if x<0 or y<0 or x>=n or y>=n or solution[x][y]==1 or Backtrack.Maze.maze[x][y]==1:
+        return False
+      
+      solution[x][y]=1
+
+      if Backtrack.Maze.maze_path(solution,target,(x+1,y),n,steps+1):
+        return True
+      
+      if Backtrack.Maze.maze_path(solution,target,(x,y+1),n,steps+1):
+        return True
+      
+      if Backtrack.Maze.maze_path(solution,target,(x-1,y),n,steps+1):
+        return True
+      
+      if Backtrack.Maze.maze_path(solution,target,(x,y-1),n,steps+1):
+        return True
+      
+      solution[x][y]=0
+
+      return False
+    
+#Maze
+ans=Backtrack.Maze
+n=4
+ans.maze_path([[0]*4 for _ in range(4)],(2,2),(0,0),n,0)
+print(Backtrack.Maze.min_steps)
+print(ans.solution)
+
+    
