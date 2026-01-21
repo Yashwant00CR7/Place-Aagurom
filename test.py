@@ -722,6 +722,7 @@ class Backtrack:
     min_steps=float('inf')
     def maze_path(solution,target,pos,n,steps):
       x,y=pos
+      #Goal
       if x==target[0] and y==target[1] and Backtrack.Maze.maze[x][y]==0:
         solution[x][y]=1
         # for i in range(len(solution)):
@@ -739,10 +740,14 @@ class Backtrack:
           #Understodd the difference between .copy() and .deepcopy()
           Backtrack.Maze.solution=Backtrack.Maze.copy.deepcopy(solution)
         return False
-
+      #Validity
       if x<0 or y<0 or x>=n or y>=n or solution[x][y]==1 or Backtrack.Maze.maze[x][y]==1:
         return False
+      #Pruning
+      if steps>=Backtrack.Maze.min_steps:
+        return False
       
+      #Set The Path
       solution[x][y]=1
 
       if Backtrack.Maze.maze_path(solution,target,(x+1,y),n,steps+1):
@@ -757,15 +762,84 @@ class Backtrack:
       if Backtrack.Maze.maze_path(solution,target,(x,y-1),n,steps+1):
         return True
       
+      #Backtrack
       solution[x][y]=0
 
       return False
+  
+  class Word_Search:
+    import copy
+    crossword=[["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]]
+    solution=[[0]*4 for _ in range(3)]
+
+    def print_word(solution):
+      crossword=Backtrack.Word_Search.crossword
+      for i in range(len(solution)):
+        for j in range(len(solution[0])):
+          print(solution[i][j],end=' ')
+        print('\t',end='')
+        for k in range(len(crossword[0])):
+          print(crossword[i][k],end=' ')
+        print()
+      print('\t')
+   
+    def find_word(solution,s,pos,i,n,m,target,visited):
+      #Goal
+      x,y=pos
+      if s==target:
+        Backtrack.Word_Search.solution=Backtrack.Word_Search.copy.deepcopy(solution)
+        return True
+      
+      #validity
+      if x<0 or y<0 or x>=n or y>=m or visited[x][y]==True:
+        return False
+      
+      if i<len(target) and Backtrack.Word_Search.crossword[x][y]==target[i]:
+        s+=Backtrack.Word_Search.crossword[x][y]
+        solution[x][y]=1
+        # print(solution)
+        i+=1
+      else:
+        s=''
+        i=0
+      #Set Visited
+      visited[x][y]=True
+      if Backtrack.Word_Search.find_word(solution,s,(x+1,y),i,n,m,target,visited):
+        return True
+      if Backtrack.Word_Search.find_word(solution,s,(x,y+1),i,n,m,target,visited):
+        return True
+      if Backtrack.Word_Search.find_word(solution,s,(x-1,y),i,n,m,target,visited):
+        return True
+      if Backtrack.Word_Search.find_word(solution,s,(x,y-1),i,n,m,target,visited):
+        return True
+      
+      #BackTrack
+      visited[x][y]=False
+
+      return False
     
+#Word Search
+ans=Backtrack.Word_Search
+words=['ba']
+Backtrack.Word_Search.crossword=["a","b"]
+crossword=Backtrack.Word_Search.crossword
+n=len(crossword)
+m=len(crossword[0])
+for word in words:
+  visited=[[False]*m for _ in range(n)]
+  for i in range(len(crossword)):
+    for j in range(len(crossword[0])):
+      if crossword[i][j]==word[0]:
+        ans.find_word([[0]*m for _ in range(n)],'',(i,j),0,n,m,word,visited)
+        print(word)
+        Backtrack.Word_Search.print_word(ans.solution)
+
+
 #Maze
-ans=Backtrack.Maze
-n=4
-ans.maze_path([[0]*4 for _ in range(4)],(2,2),(0,0),n,0)
-print(Backtrack.Maze.min_steps)
-print(ans.solution)
+# ans=Backtrack.Maze
+# n=4
+# ans.maze_path([[0]*4 for _ in range(4)],(2,2),(0,0),n,0)
+# print(Backtrack.Maze.min_steps)
+# print(ans.solution)
 
     
